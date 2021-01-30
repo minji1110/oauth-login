@@ -1,5 +1,6 @@
 package minji.oauthlogin.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final PrincipalOauthService principalOauthService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -32,7 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
               .formLogin()
               .loginPage("/loginForm")
               .loginProcessingUrl("/login")
-              .defaultSuccessUrl("/");
+              .defaultSuccessUrl("/")
+
+              .and()
+              .oauth2Login()
+              //google 로그인 후 처리? 엑세스토큰 + 사용자 프로필 정보를 받을 수 있음
+              // ->이 정보 토대로 회원가입 시킬 수 있음
+              .loginPage("/loginForm")
+              .userInfoEndpoint()
+              .userService(principalOauthService);
     }
 
 }

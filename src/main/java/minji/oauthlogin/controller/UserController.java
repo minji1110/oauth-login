@@ -1,10 +1,13 @@
 package minji.oauthlogin.controller;
 
 import lombok.RequiredArgsConstructor;
+import minji.oauthlogin.config.PrincipalDetails;
 import minji.oauthlogin.entity.Role;
 import minji.oauthlogin.entity.User;
 import minji.oauthlogin.entity.UserJoinDto;
 import minji.oauthlogin.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +21,9 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String home(){
+    public String home(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        if(principalDetails!=null)
+        {System.out.println(principalDetails.getUser().getUserId());}
         return "home";
     }
 
@@ -49,5 +54,11 @@ public class UserController {
     @GetMapping("/admin")
     public @ResponseBody String admin(){
         return "admin만 접속 가능";
+    }
+
+    @GetMapping("/test/login")
+    public @ResponseBody String testLogin(Authentication authentication){
+        System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
+        return "login 정보 확인";
     }
 }
