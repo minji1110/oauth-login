@@ -36,13 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
               .formLogin()
               .loginPage("/loginForm")
               .loginProcessingUrl("/login")
-              .defaultSuccessUrl("/")
+              .defaultSuccessUrl("/welcome")
 
               .and()
               .oauth2Login()
               //google 로그인 후 처리? 엑세스토큰 + 사용자 프로필 정보를 받을 수 있음
               // ->이 정보 토대로 회원가입 시킬 수 있음
               .loginPage("/loginForm")
+              .defaultSuccessUrl("/welcome")
               .userInfoEndpoint()
               .userService(principalOauthService);
     }

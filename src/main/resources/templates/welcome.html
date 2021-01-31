@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome</title>
+</head>
+<body>
+    <h2>welcome! 안녕하세요 <span th:text="${user.getUserName()}"></span> 님! </h2>
+    권한은 <span th:text="${user.getUserRole().getRoleName()}"></span> 입니다.
+</body>
+</html>

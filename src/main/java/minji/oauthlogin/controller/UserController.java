@@ -2,7 +2,6 @@ package minji.oauthlogin.controller;
 
 import lombok.RequiredArgsConstructor;
 import minji.oauthlogin.config.PrincipalDetails;
-import minji.oauthlogin.entity.Role;
 import minji.oauthlogin.entity.User;
 import minji.oauthlogin.entity.UserJoinDto;
 import minji.oauthlogin.repository.UserRepository;
@@ -10,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,8 +23,16 @@ public class UserController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal PrincipalDetails principalDetails){
         if(principalDetails!=null)
-        {System.out.println(principalDetails.getUser().getUserId());}
+        {
+            System.out.println(principalDetails.getUser().getUserId());
+        }
         return "home";
+    }
+
+    @GetMapping("/welcome")
+    public String welcome(Model model,@AuthenticationPrincipal PrincipalDetails principalDetails){
+        model.addAttribute("user",principalDetails.getUser());
+        return "welcome";
     }
 
     @GetMapping("/joinForm")
@@ -44,7 +52,7 @@ public class UserController {
                 .userEmail(userJoinDto.getUserEmail())
                 .userName(userJoinDto.getUserName())
                 .userPassword(passwordEncoder.encode(userJoinDto.getUserPassword()))
-                .userRole(Role.ROLE_USER)
+                .userRole(userJoinDto.getUserRole())
                 .build();
 
         userRepository.save(user);
